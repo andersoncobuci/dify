@@ -653,7 +653,14 @@ services:
       - ./volumes/certbot/conf/live:/etc/letsencrypt/live # cert dir (with certbot container)
       - ./volumes/certbot/conf:/etc/letsencrypt
       - ./volumes/certbot/www:/var/www/html
-    entrypoint: [ 'sh', '-c', "cp /docker-entrypoint-mount.sh /docker-entrypoint.sh && sed -i 's/\r$$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh && /docker-entrypoint.sh" ]
+    entrypoint:
+      [
+        'sh',
+        '-c',
+        "cp /docker-entrypoint-mount.sh /docker-entrypoint.sh && sed -i
+          's/\r$$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh &&
+          /docker-entrypoint.sh"
+      ]
     environment:
       NGINX_SERVER_NAME: ${NGINX_SERVER_NAME:-_}
       NGINX_HTTPS_ENABLED: ${NGINX_HTTPS_ENABLED:-false}
@@ -674,9 +681,6 @@ services:
     depends_on:
       - api
       - web
-    ports:
-      - '${EXPOSE_NGINX_PORT:-80}:${NGINX_PORT:-80}'
-      - '${EXPOSE_NGINX_SSL_PORT:-443}:${NGINX_SSL_PORT:-443}'
 
   # The Weaviate vector store.
   weaviate:
